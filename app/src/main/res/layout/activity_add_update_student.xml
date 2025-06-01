@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:padding="16dp"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editName"
+        android:hint="Họ tên"
+        android:minHeight="48dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editMSSV"
+        android:hint="MSSV"
+        android:minHeight="48dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:hint="Email"
+        android:minHeight="48dp"
+        android:inputType="textEmailAddress"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editPhone"
+        android:hint="Số điện thoại"
+        android:minHeight="48dp"
+        android:inputType="phone"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:text="Lưu"
+        android:minHeight="48dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>
