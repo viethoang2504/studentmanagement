@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     ArrayList<Student> studentList;
     StudentAdapter adapter;
+    DatabaseHelper dbHelper;
     static final int ADD_STUDENT_REQUEST = 1;
     static final int UPDATE_STUDENT_REQUEST = 2;
     int selectedPosition = -1;
@@ -39,19 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Khởi tạo ListView và các thành phần khác
         listView = findViewById(R.id.listViewStudents);
-        studentList = new ArrayList<>();
+        dbHelper = new DatabaseHelper(this);
+        studentList = dbHelper.getAllStudents(); // Lấy danh sách từ SQLite
 
-        // Dữ liệu mẫu
-        studentList.add(new Student("Nguyễn Văn A", "SV001", "a.nguyen@example.com", "0912345678"));
-        studentList.add(new Student("Trần Thị B", "SV002", "b.tran@example.com", "0912345679"));
-        studentList.add(new Student("Lê Văn C", "SV003", "c.le@example.com", "0912345680"));
-        studentList.add(new Student("Phạm Thị D", "SV004", "d.pham@example.com", "0912345681"));
-        studentList.add(new Student("Hoàng Văn E", "SV005", "e.hoang@example.com", "0912345682"));
-        studentList.add(new Student("Đỗ Thị F", "SV006", "f.do@example.com", "0912345683"));
-        studentList.add(new Student("Vũ Văn G", "SV007", "g.vu@example.com", "0912345684"));
-        studentList.add(new Student("Bùi Thị H", "SV008", "h.bui@example.com", "0912345685"));
-        studentList.add(new Student("Đặng Văn I", "SV009", "i.dang@example.com", "0912345686"));
-        studentList.add(new Student("Lý Thị K", "SV010", "k.ly@example.com", "0912345687"));
+        // Nếu danh sách rỗng, thêm dữ liệu mẫu (chỉ chạy lần đầu)
+        if (studentList.isEmpty()) {
+            addSampleData();
+            studentList = dbHelper.getAllStudents(); // Cập nhật lại danh sách
+        }
 
         adapter = new StudentAdapter(this, studentList);
         listView.setAdapter(adapter);
@@ -60,6 +56,20 @@ public class MainActivity extends AppCompatActivity {
             selectedPosition = position;
             showPopupMenu(view, position);
         });
+    }
+
+    private void addSampleData() {
+        // Dữ liệu mẫu
+        dbHelper.addStudent(new Student("Nguyễn Văn A", "SV001", "a.nguyen@example.com", "0912345678"));
+        dbHelper.addStudent(new Student("Trần Thị B", "SV002", "b.tran@example.com", "0912345679"));
+        dbHelper.addStudent(new Student("Lê Văn C", "SV003", "c.le@example.com", "0912345680"));
+        dbHelper.addStudent(new Student("Phạm Thị D", "SV004", "d.pham@example.com", "0912345681"));
+        dbHelper.addStudent(new Student("Hoàng Văn E", "SV005", "e.hoang@example.com", "0912345682"));
+        dbHelper.addStudent(new Student("Đỗ Thị F", "SV006", "f.do@example.com", "0912345683"));
+        dbHelper.addStudent(new Student("Vũ Văn G", "SV007", "g.vu@example.com", "0912345684"));
+        dbHelper.addStudent(new Student("Bùi Thị H", "SV008", "h.bui@example.com", "0912345685"));
+        dbHelper.addStudent(new Student("Đặng Văn I", "SV009", "i.dang@example.com", "0912345686"));
+        dbHelper.addStudent(new Student("Lý Thị K", "SV010", "k.ly@example.com", "0912345687"));
     }
 
     private void showPopupMenu(View view, int position) {
@@ -100,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc muốn xóa sinh viên này?")
                 .setPositiveButton("Xóa", (dialog, which) -> {
-                    studentList.remove(position);
+                    dbHelper.deleteStudent(studentList.get(position).getMssv()); // Xóa từ SQLite
+                    studentList.remove(position); // Xóa từ ArrayList
                     adapter.notifyDataSetChanged();
                 })
                 .setNegativeButton("Hủy", null)
@@ -133,10 +144,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MainActivity", "Received student: " + (student != null ? student.getName() : "null"));
 
             if (requestCode == ADD_STUDENT_REQUEST) {
-                studentList.add(student);
+                dbHelper.addStudent(student); // Thêm vào SQLite
+                studentList.add(student); // Thêm vào ArrayList
             } else if (requestCode == UPDATE_STUDENT_REQUEST && selectedPosition != -1) {
                 Log.d("MainActivity", "Updating student at position: " + selectedPosition);
-                studentList.set(selectedPosition, student);
+                dbHelper.updateStudent(student); // Cập nhật trong SQLite
+                studentList.set(selectedPosition, student); // Cập nhật trong ArrayList
             } else {
                 Log.d("MainActivity", "Invalid request or position: " + selectedPosition);
             }
