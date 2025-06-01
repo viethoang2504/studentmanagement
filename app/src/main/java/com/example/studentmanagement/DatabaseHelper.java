@@ -12,7 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "StudentManagement.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_STUDENTS = "students";
-    private static final String COLUMN_MSSV = "mssv";
+    private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PHONE = "phone";
@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTable = "CREATE TABLE " + TABLE_STUDENTS + " (" +
-                COLUMN_MSSV + " TEXT PRIMARY KEY, " +
+                COLUMN_ID + " TEXT PRIMARY KEY, " +
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_EMAIL + " TEXT, " +
                 COLUMN_PHONE + " TEXT)";
@@ -41,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void addStudent(Student student) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_MSSV, student.getMssv());
+        values.put(COLUMN_ID, student.getMssv());
         values.put(COLUMN_NAME, student.getName());
         values.put(COLUMN_EMAIL, student.getEmail());
         values.put(COLUMN_PHONE, student.getPhone());
@@ -56,14 +56,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, student.getName());
         values.put(COLUMN_EMAIL, student.getEmail());
         values.put(COLUMN_PHONE, student.getPhone());
-        db.update(TABLE_STUDENTS, values, COLUMN_MSSV + " = ?", new String[]{student.getMssv()});
+        db.update(TABLE_STUDENTS, values, COLUMN_ID + " = ?", new String[]{student.getMssv()});
         db.close();
     }
 
     // Xóa sinh viên
     public void deleteStudent(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_STUDENTS, COLUMN_MSSV + " = ?", new String[]{id});
+        db.delete(TABLE_STUDENTS, COLUMN_ID + " = ?", new String[]{id});
         db.close();
     }
 
@@ -74,7 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_STUDENTS, null);
 
         if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(COLUMN_MSSV);
+            int idIndex = cursor.getColumnIndex(COLUMN_ID);
             int nameIndex = cursor.getColumnIndex(COLUMN_NAME);
             int emailIndex = cursor.getColumnIndex(COLUMN_EMAIL);
             int phoneIndex = cursor.getColumnIndex(COLUMN_PHONE);
